@@ -1,0 +1,15 @@
+{
+  "name": "p2pserver",
+  "module": "index.ts",
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "peer": "^1.0.2"
+  }
+}
