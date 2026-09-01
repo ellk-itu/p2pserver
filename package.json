@@ -1,6 +1,9 @@
 {
   "name": "p2pserver",
   "module": "index.ts",
+  "scripts": {
+    "dev": "bun run index.ts"
+  },
   "devDependencies": {
     "@types/bun": "latest"
   },
@@ -10,6 +13,7 @@
   "private": true,
   "type": "module",
   "dependencies": {
+    "node": "^26.8.1",
     "peer": "^1.0.2"
   }
 }
