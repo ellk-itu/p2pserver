@@ -2,7 +2,7 @@ import { readFileSync } from "node:fs";
 import { PeerServer } from "peer";
 
 const key = readFileSync("./private.key").toString();
-const cert = readFileSync("./certification").toString();
+const cert = readFileSync("./certificate.crt").toString();
 
 const server = PeerServer({
   port: 6969,
@@ -11,12 +11,10 @@ const server = PeerServer({
   ssl: { key: key, cert: cert },
 });
 
-server.on("mount", () => {
-  console.log(`
+console.log(`
     Server Running
     key is ${key}
     `);
-});
 
 server.on("connection", (client) => {
   console.log("Client connected:", client.getId());
