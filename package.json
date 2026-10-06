@@ -2,10 +2,12 @@
   "name": "p2pserver",
   "module": "index.ts",
   "scripts": {
-    "dev": "bun run index.ts"
+    "dev": "bun run index.ts",
+    "start": "ts-node index.ts"
   },
   "devDependencies": {
-    "@types/bun": "latest"
+    "@types/bun": "latest",
+    "@types/cors": "^2.8.19"
   },
   "peerDependencies": {
     "typescript": "^5"
@@ -13,6 +15,10 @@
   "private": true,
   "type": "module",
   "dependencies": {
+    "@types/better-sqlite3": "^9.6.0",
+    "better-sqlite3": "^13.0.3",
+    "cors": "^2.8.6",
+    "express": "^5.2.1",
     "node": "^26.8.1",
     "peer": "^1.0.2"
   }
