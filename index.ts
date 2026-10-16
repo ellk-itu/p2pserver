@@ -1,6 +1,9 @@
 import express, { json } from "express";
 import { ExpressPeerServer } from "peer";
 import cors from "cors";
+import { config } from "dotenv";
+
+config({ path: "./config.env" });
 
 process.on("uncaughtException", (err) => {
   console.error("Uncaught Exception:", err);
@@ -12,7 +15,7 @@ process.on("unhandledRejection", (reason, promise) => {
   process.exit(1);
 });
 
-const port = 3000;
+const port = parseInt(process.env.PORT || "3000");
 const app = express();
 const server = app.listen(port, () => {
   console.log(`\x1b[1mExpress server mounted on port ${port}\x1b[0m \n`);
@@ -23,7 +26,10 @@ app.get("/", (_, res) => {
 });
 
 const peerServer = ExpressPeerServer(server, {
-  allow_discovery: true, 
+  allow_discovery: true,
+  host: process.env.HOST,
+  port: port,
+  path: process.env.PATH,
 });
 
 peerServer.once("mount", () => {
