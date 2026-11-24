@@ -1,7 +1,6 @@
 import express, { type ErrorRequestHandler } from "express";
 import config from "./config";
 import processHandling from "./processHandling";
-import createPeerServer from "./createPeerServer";
 import addMiddleware from "./addMiddleware";
 import path from "node:path";
 
@@ -18,9 +17,15 @@ const server = app.listen(config.PORT, () => {
   }
 });
 
+console.log("\x1b[3m");
+addMiddleware(app, server);
+console.log("\x1b[0m");
+
 app.post("/auth/register", (req, res) => {
   const { email, password } = req.body;
 
+  
+  
   res.sendStatus(500);
 });
 
@@ -47,12 +52,7 @@ app.delete("/users/me", (req, res) => {
   res.sendStatus(500);
 });
 
-console.log("\x1b[3m");
-addMiddleware(app, server);
-console.log("\x1b[0m");
-
 const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
-  console.error(err);
   res.status(err.status || 500).json({
     message: err.message,
     errors: err.errors,
