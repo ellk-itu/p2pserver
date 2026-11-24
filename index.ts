@@ -2,6 +2,7 @@ import express, { json } from "express";
 import { ExpressPeerServer } from "peer";
 import cors from "cors";
 import { config } from "dotenv";
+import * as OpenAPIValidator from "express-openapi-validator";
 
 config({ path: "./config.env" });
 
@@ -19,10 +20,6 @@ const port = parseInt(process.env.PORT || "3000");
 const app = express();
 const server = app.listen(port, () => {
   console.log(`\x1b[1mExpress server mounted on port ${port}\x1b[0m \n`);
-});
-
-app.get("/", (_, res) => {
-  res.status(200).json({ message: "Hello this is the server" });
 });
 
 const peerServer = ExpressPeerServer(server, {
@@ -57,6 +54,15 @@ console.log(`Added cors middleware`);
 
 app.use(json());
 console.log(`Added JSON middleware`);
+
+app.use(
+  OpenAPIValidator.middleware({
+    apiSpec: "./openAPI.yaml",
+    validateRequests: true,
+    validateResponses: true,
+  }),
+);
+console.log(`Added OpenAPI validation middleware`);
 
 app.use("/", peerServer);
 console.log(`Added Peer Server middleware`);
