@@ -8,8 +8,9 @@ const envSchema = z.object({
   PORT: z.coerce.number().min(0),
   PEER_PATH: z.string(),
   SECURE: z.stringbool(),
-  CERT: z.string().optional(),
-  KEY: z.string().optional(),
+  SSLCERT: z.string().optional(),
+  SSLKEY: z.string().optional(),
+  JWT_SECRET: z.string().optional(),
   LOGGING: z.stringbool(),
   VERBOSE: z.stringbool(),
 });
