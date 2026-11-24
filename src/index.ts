@@ -4,6 +4,7 @@ import cors from "cors";
 import * as OpenAPIValidator from "express-openapi-validator";
 import config from "./config";
 
+
 process.on("uncaughtException", (err) => {
   console.error("Uncaught Exception:", err);
   process.exit(1);

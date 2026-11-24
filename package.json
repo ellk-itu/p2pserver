@@ -4,7 +4,7 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "serve": "bun run index.ts --verbose"
+    "serve": "bun run src/index.ts"
   },
   "devDependencies": {
     "@types/bun": "latest",
