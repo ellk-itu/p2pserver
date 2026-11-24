@@ -1,10 +1,8 @@
 import express, { json } from "express";
 import { ExpressPeerServer } from "peer";
 import cors from "cors";
-import { config } from "dotenv";
 import * as OpenAPIValidator from "express-openapi-validator";
-
-config({ path: "./config.env" });
+import config from "./config";
 
 process.on("uncaughtException", (err) => {
   console.error("Uncaught Exception:", err);
@@ -16,7 +14,7 @@ process.on("unhandledRejection", (reason, promise) => {
   process.exit(1);
 });
 
-const port = parseInt(process.env.PORT || "3000");
+const port = config.PORT;
 const app = express();
 const server = app.listen(port, () => {
   console.log(`\x1b[1mExpress server mounted on port ${port}\x1b[0m \n`);
@@ -24,9 +22,9 @@ const server = app.listen(port, () => {
 
 const peerServer = ExpressPeerServer(server, {
   allow_discovery: true,
-  host: process.env.HOST,
+  host: config.HOST,
   port: port,
-  path: process.env.PATH,
+  path: config.PEER_PATH,
 });
 
 peerServer.once("mount", () => {
@@ -42,7 +40,7 @@ peerServer.on("disconnect", (peer) => {
 });
 
 peerServer.on("error", (e) => {
-  console.error("An error occured");
+  console.error("An error occurred");
   console.error(e.message);
 });
 
