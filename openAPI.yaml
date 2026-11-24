@@ -8,7 +8,7 @@ info:
     REST endpoints listed here.
 
 servers:
-  - url: 93.93.205.203
+  - url: 93.93.205.203:3000
     description: Production server
 
 tags:
@@ -95,6 +95,22 @@ paths:
           description: Logged out
         "401":
           $ref: "#/components/responses/Unauthorized"
+        default:
+          $ref: "#/components/responses/UnexpectedError"
+
+  /docs/api:
+    get:
+      tags: [Documentation]
+      operationId: getAPIDocumentation
+      summary: Get the API documentation
+      security: []
+      responses:
+        "200":
+          description: API Documentation
+          content:
+            text/html:
+              schema:
+                type: string
         default:
           $ref: "#/components/responses/UnexpectedError"
 
