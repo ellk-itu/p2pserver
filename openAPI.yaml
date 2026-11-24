@@ -1,0 +1,253 @@
+openapi: 3.1.0
+info:
+  title: User and WebRTC Signaling API
+  version: 1.0.0
+  description: >
+    REST API for user registration, authentication, and account management.
+    PeerJS signaling is handled by the PeerServer connection, not by the
+    REST endpoints listed here.
+
+servers:
+  - url: 93.93.205.203
+    description: Production server
+
+tags:
+  - name: Authentication
+  - name: Users
+
+paths:
+  /auth/register:
+    post:
+      tags: [Authentication]
+      operationId: registerUser
+      summary: Register an account
+      security: []
+      description: Register a new user; Request body requires email and bcrypt hashed password
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegisterRequest"
+            example:
+              email: person@example.com
+              password: "bcrypt-hashed-password"
+      responses:
+        "201":
+          description: Account created; an access token is returned
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "409":
+          description: An account with this email already exists
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+        default:
+          $ref: "#/components/responses/UnexpectedError"
+
+  /auth/login:
+    post:
+      tags: [Authentication]
+      operationId: loginUser
+      summary: Log in
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginRequest"
+            example:
+              email: person@example.com
+              password: "a-long-example-password"
+      responses:
+        "200":
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          description: Email or password is invalid
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+        default:
+          $ref: "#/components/responses/UnexpectedError"
+
+  /auth/logout:
+    post:
+      tags: [Authentication]
+      operationId: logoutUser
+      summary: Log out and revoke the current access token
+      security:
+        - bearerAuth: []
+      responses:
+        "204":
+          description: Logged out
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        default:
+          $ref: "#/components/responses/UnexpectedError"
+
+  /users/me:
+    get:
+      tags: [Users]
+      operationId: getCurrentUser
+      summary: Get the authenticated user's account
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Current user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        default:
+          $ref: "#/components/responses/UnexpectedError"
+
+    delete:
+      tags: [Users]
+      operationId: deleteCurrentUser
+      summary: Delete the authenticated user's account
+      security:
+        - bearerAuth: []
+      responses:
+        "204":
+          description: Account deleted
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        default:
+          $ref: "#/components/responses/UnexpectedError"
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    RegisterRequest:
+      type: object
+      additionalProperties: false
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+          maxLength: 254
+        password:
+          type: string
+          format: password
+          minLength: 12
+          writeOnly: true
+
+    LoginRequest:
+      type: object
+      additionalProperties: false
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          format: password
+          writeOnly: true
+
+    AuthResponse:
+      type: object
+      additionalProperties: false
+      required:
+        - user
+        - accessToken
+        - tokenType
+        - expiresIn
+      properties:
+        user:
+          $ref: "#/components/schemas/User"
+        accessToken:
+          type: string
+          description: JWT access token
+        tokenType:
+          type: string
+          const: Bearer
+        expiresIn:
+          type: integer
+          description: Token lifetime in seconds
+          example: 3600
+
+    User:
+      type: object
+      additionalProperties: false
+      required:
+        - id
+        - email
+        - createdAt
+      properties:
+        id:
+          type: string
+          format: uuid
+        email:
+          type: string
+          format: email
+        createdAt:
+          type: string
+          format: date-time
+
+    Problem:
+      type: object
+      description: Error response using the application/problem+json format
+      properties:
+        type:
+          type: string
+          format: uri-reference
+        title:
+          type: string
+        status:
+          type: integer
+        detail:
+          type: string
+        code:
+          type: string
+      required:
+        - title
+        - status
+
+  responses:
+    BadRequest:
+      description: The request is malformed or contains invalid fields
+      content:
+        application/problem+json:
+          schema:
+            $ref: "#/components/schemas/Problem"
+
+    Unauthorized:
+      description: Missing, invalid, expired, or revoked access token
+      content:
+        application/problem+json:
+          schema:
+            $ref: "#/components/schemas/Problem"
+
+    UnexpectedError:
+      description: Unexpected server error
+      content:
+        application/problem+json:
+          schema:
+            $ref: "#/components/schemas/Problem"
