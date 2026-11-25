@@ -99,6 +99,22 @@ paths:
         default:
           $ref: "#/components/responses/UnexpectedError"
 
+  /docs/openapi/raw:
+    get:
+      tags: [Documentation]
+      operationId: getRawAPIDocumentation
+      summary: Get the raw API documentation
+      security: []
+      responses:
+        "200":
+          description: OpenAPI yaml document
+          content:
+            text/html:
+              schema:
+                type: string
+        default:
+          $ref: "#/components/responses/UnexpectedError"
+
   /users/me:
     get:
       tags: [Users]

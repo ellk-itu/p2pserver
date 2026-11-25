@@ -81,6 +81,11 @@ app.get("/docs/openapi", (req, res) => {
   res.status(200).sendFile(path.join(process.cwd() + "/static/openapi.html"));
 });
 
+app.get("/docs/openapi/raw", (req, res) => {
+  //TODO add response when no docs have been generated
+  res.status(200).sendFile(path.join(process.cwd() + "/openAPI.yaml"));
+});
+
 app.get("/users/me", async (req, res) => {
   const token = req.headers.authorization;
 

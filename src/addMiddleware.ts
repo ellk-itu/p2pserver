@@ -32,7 +32,12 @@ const addMiddleware = (app: Express, server: Server) => {
 
   app.use(
     expressjwt({ secret: config.JWT_SECRET, algorithms: ["HS256"] }).unless({
-      path: ["/auth/register", "/auth/login", "/docs/openapi"],
+      path: [
+        "/auth/register",
+        "/auth/login",
+        "/docs/openapi",
+        "/docs/openapi/raw",
+      ],
     }),
   );
   if (config.LOGGING && config.VERBOSE)
