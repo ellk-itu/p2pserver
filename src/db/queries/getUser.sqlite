@@ -1,0 +1,1 @@
+SELECT * FROM USERS WHERE email = ? OR id = ? LIMIT 1;

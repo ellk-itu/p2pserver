@@ -6,17 +6,20 @@
   "scripts": {
     "serve": "bun run src/index.ts",
     "build-docs": "bunx redocly build-docs openAPI.yaml -o ./static/openapi.html",
-    "build-schema-types": "bunx openapi-typescript openAPI.yaml -o ./src/types/schema.d.ts"
+    "build-schema-types": "bunx openapi-typescript openAPI.yaml -o ./src/types/openapi.d.ts"
   },
   "devDependencies": {
     "@redocly/cli": "^2.83.0",
     "@types/bcrypt": "^6.0.0",
+    "@types/better-sqlite3": "^9.6.0",
     "@types/bun": "latest",
     "@types/cors": "^2.8.19",
     "@types/dotenv": "^6.1.1",
     "@types/express": "^5.0.6",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^26.6.6",
+    "@types/uuid": "^10.0.0",
+    "bun": "^1.4.5",
     "openapi-typescript": "^7.13.0"
   },
   "peerDependencies": {
@@ -24,12 +27,14 @@
   },
   "dependencies": {
     "bcrypt": "^6.0.0",
+    "better-sqlite3": "^13.2.0",
     "cors": "^2.8.6",
     "dotenv": "^18.0.10",
     "express": "^5.3.0",
     "express-openapi-validator": "^5.6.2",
     "jsonwebtoken": "^9.0.3",
     "peer": "^1.0.2",
+    "uuid": "^14.0.3",
     "zod": "^4.6.7"
   }
 }
