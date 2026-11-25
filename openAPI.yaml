@@ -83,22 +83,7 @@ paths:
         default:
           $ref: "#/components/responses/UnexpectedError"
 
-  /auth/logout:
-    post:
-      tags: [Authentication]
-      operationId: logoutUser
-      summary: Log out and revoke the current access token
-      security:
-        - bearerAuth: []
-      responses:
-        "204":
-          description: Logged out
-        "401":
-          $ref: "#/components/responses/Unauthorized"
-        default:
-          $ref: "#/components/responses/UnexpectedError"
-
-  /docs/api:
+  /docs/openapi:
     get:
       tags: [Documentation]
       operationId: getAPIDocumentation

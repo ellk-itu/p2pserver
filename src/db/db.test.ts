@@ -20,4 +20,6 @@ test("Database wrapper functions", async () => {
   expect((await getUserById(exampleUser.id))?.id).toBe(exampleUser.id);
 
   await deleteUser(exampleUser.id);
+
+  expect((await getUserById(exampleUser.id))?.id).toBeUndefined();
 });

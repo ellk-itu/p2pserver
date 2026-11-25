@@ -7,7 +7,7 @@ export const insertUser = async (user: User) => {
     user.id,
     user.email,
     user.password_hash,
-    user.created_at.toDateString(),
+    user.created_at.toISOString(),
   );
 };
 
@@ -18,7 +18,12 @@ export const getUserByEmail = async (
     [User["email"], User["id"]],
     User
   >;
-  return stmt.get(email, "");
+
+  const user = stmt.get(email, "");
+
+  if (!user) return undefined;
+
+  return Object.assign(user, { created_at: new Date(user.created_at) });
 };
 
 export const getUserById = async (id: string): Promise<User | undefined> => {
@@ -26,7 +31,11 @@ export const getUserById = async (id: string): Promise<User | undefined> => {
     [User["email"], User["id"]],
     User
   >;
-  return stmt.get("", id);
+  const user = stmt.get("", id);
+
+  if (!user) return undefined;
+
+  return Object.assign(user, { created_at: new Date(user.created_at) });
 };
 
 export const deleteUser = async (id: string) => {
