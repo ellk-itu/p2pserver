@@ -12,10 +12,6 @@ import z from "zod";
 import { deleteUser, getUserById } from "./db";
 
 // ===== Setup =====
-if (!config.JWT_SECRET) {
-  console.error("No JWT Secret set. Set the environment variable JWT_SECRET");
-  process.exit(1);
-}
 processHandling();
 
 // ===== Server =====
@@ -85,57 +81,49 @@ app.get("/docs/openapi", (req, res) => {
   res.status(200).sendFile(path.join(process.cwd() + "/static/openapi.html"));
 });
 
-app.get(
-  "/users/me",
-  expressjwt({ secret: config.JWT_SECRET, algorithms: ["HS256"] }),
-  async (req, res) => {
-    const token = req.headers.authorization;
+app.get("/users/me", async (req, res) => {
+  const token = req.headers.authorization;
 
-    if (!token) {
-      throw new Error("No JWT token");
-    }
+  if (!token) {
+    throw new Error("No JWT token");
+  }
 
-    const id = z.parse(
-      z.string(),
-      jwt.decode(token.split(" ")[1] as string, { json: true })?.sub,
-    );
+  const id = z.parse(
+    z.string(),
+    jwt.decode(token.split(" ")[1] as string, { json: true })?.sub,
+  );
 
-    const user = await getUserById(id);
+  const user = await getUserById(id);
 
-    if (!user) throw new Error("No such error exists");
+  if (!user) throw new Error("No such error exists");
 
-    const responseBody: components["schemas"]["User"] = {
-      id: user.id,
-      email: user.email,
-      createdAt: user.created_at.toISOString(),
-    };
-    res.status(200).json(responseBody);
-  },
-);
+  const responseBody: components["schemas"]["User"] = {
+    id: user.id,
+    email: user.email,
+    createdAt: user.created_at.toISOString(),
+  };
+  res.status(200).json(responseBody);
+});
 
-app.delete(
-  "/users/me",
-  expressjwt({ secret: config.JWT_SECRET, algorithms: ["HS256"] }),
-  async (req, res, next) => {
-    const token = req.headers.authorization;
+app.delete("/users/me", async (req, res, next) => {
+  const token = req.headers.authorization;
 
-    if (!token) {
-      throw new Error("No JWT token");
-    }
+  if (!token) {
+    throw new Error("No JWT token");
+  }
 
-    const id = z.parse(
-      z.string(),
-      jwt.decode(token.split(" ")[1] as string, { json: true })?.sub,
-    );
+  const id = z.parse(
+    z.string(),
+    jwt.decode(token.split(" ")[1] as string, { json: true })?.sub,
+  );
 
-    try {
-      await deleteUser(id);
-      res.sendStatus(204);
-    } catch (e) {
-      next(e);
-    }
-  },
-);
+  try {
+    await deleteUser(id);
+    res.sendStatus(204);
+  } catch (e) {
+    next(e);
+  }
+});
 
 const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
   if (err instanceof ErrorResponse) {
