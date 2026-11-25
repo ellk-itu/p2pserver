@@ -41,24 +41,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/auth/logout": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Log out and revoke the current access token */
-        post: operations["logoutUser"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/docs/api": {
+    "/docs/openapi": {
         parameters: {
             query?: never;
             header?: never;
@@ -67,6 +50,23 @@ export interface paths {
         };
         /** Get the API documentation */
         get: operations["getAPIDocumentation"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/docs/openapi/raw": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get the raw API documentation */
+        get: operations["getRawAPIDocumentation"];
         put?: never;
         post?: never;
         delete?: never;
@@ -257,26 +257,6 @@ export interface operations {
             default: components["responses"]["UnexpectedError"];
         };
     };
-    logoutUser: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Logged out */
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            401: components["responses"]["Unauthorized"];
-            default: components["responses"]["UnexpectedError"];
-        };
-    };
     getAPIDocumentation: {
         parameters: {
             query?: never;
@@ -287,6 +267,27 @@ export interface operations {
         requestBody?: never;
         responses: {
             /** @description API Documentation */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/html": string;
+                };
+            };
+            default: components["responses"]["UnexpectedError"];
+        };
+    };
+    getRawAPIDocumentation: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OpenAPI yaml document */
             200: {
                 headers: {
                     [name: string]: unknown;

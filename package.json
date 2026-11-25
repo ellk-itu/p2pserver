@@ -5,8 +5,10 @@
   "private": true,
   "scripts": {
     "serve": "bun run src/index.ts",
+    "start": "bun run build-docs && bun run build-schema-types && nohup bun run serve &",
     "build-docs": "bunx redocly build-docs openAPI.yaml -o ./static/openapi.html",
-    "build-schema-types": "bunx openapi-typescript openAPI.yaml -o ./src/types/openapi.d.ts"
+    "build-schema-types": "bunx openapi-typescript openAPI.yaml -o ./src/types/openapi.d.ts",
+    "test": "bun test"
   },
   "devDependencies": {
     "@flatfile/openapi-to-zod": "^1.1.1",
