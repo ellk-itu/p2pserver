@@ -4,6 +4,7 @@ import * as OpenAPIValidator from "express-openapi-validator";
 import config from "./config";
 import type { Server } from "node:http";
 import createPeerServer from "./createPeerServer";
+import { expressjwt } from "express-jwt";
 
 const addMiddleware = (app: Express, server: Server) => {
   const peerServer = createPeerServer(server);
@@ -24,7 +25,11 @@ const addMiddleware = (app: Express, server: Server) => {
   if (config.LOGGING && config.VERBOSE)
     console.log(`Added OpenAPI validation middleware`);
 
-  app.use("/", peerServer);
+  app.use(
+    "/",
+    expressjwt({ secret: config.JWT_SECRET || "", algorithms: ["HS256"] }),
+    peerServer,
+  );
   if (config.LOGGING && config.VERBOSE)
     console.log(`Added Peer Server middleware`);
 };
